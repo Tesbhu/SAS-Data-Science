@@ -91,7 +91,7 @@ Estas son solo algunas de las opciones disponibles en SAS para recopilar datos. 
 - Utiliza técnicas de minería de datos en SAS, como el procedimiento PROC HPDM para descubrir patrones y relaciones ocultas en los datos.
 - Aprende a utilizar herramientas de visualización en SAS, como PROC SGPLOT y PROC SGPANEL, para representar gráficamente los resultados del análisis.
 
-6.Aprendizaje automático en SAS:
+6. Aprendizaje automático en SAS:
 
 - Explora las capacidades de aprendizaje automático en SAS, utilizando procedimientos como PROC HPFOREST para bosques aleatorios y PROC HPSVM para máquinas de vectores de soporte.
 - Aprende a evaluar y validar modelos utilizando técnicas como validación cruzada y curvas ROC.
@@ -112,6 +112,8 @@ Aquí tienes algunas opciones para automatizar procesos en SAS:
 4. Scheduler SAS: SAS ofrece un componente llamado SAS Scheduler, que es una herramienta para la automatización de tareas en SAS. Puedes programar la ejecución de programas SAS, definir dependencias entre tareas y administrar el flujo de trabajo en un entorno automatizado.
 
 Estas son solo algunas opciones para automatizar procesos en SAS. El enfoque que elijas dependerá de tus necesidades específicas y del entorno en el que estés trabajando. SAS ofrece una amplia documentación y recursos que te ayudarán a aprender más sobre la automatización en SAS y a aprovechar al máximo estas capacidades.
+
+------------------------------------------
 
 ### Ejemplo de Macro SAS
 Supongamos que tienes un conjunto de datos que contiene información de ventas mensuales y quieres calcular el promedio de ventas para cada año. Puedes utilizar una macro para automatizar este cálculo:
@@ -147,3 +149,120 @@ En este ejemplo, la macro se llama "calcular_promedio_ventas" y acepta un parám
 3. Muestra los resultados utilizando el procedimiento PRINT.
 
 Para utilizar la macro, debes llamarla utilizando %calcular_promedio_ventas(tus_datos), donde "tus_datos" es el nombre de tu conjunto de datos.
+
+### Ejemplo de un análisis estadístico 
+
+Aquí tienes un ejemplo básico de cómo realizar un análisis estadístico descriptivo utilizando SAS y una base de datos SQL que contiene registros de estados financieros:
+```SAS
+/* Paso 1: Conectarse a la base de datos SQL */
+libname mylib sqlsvr user=myusername password=mypassword server=myserver database=mydatabase;
+
+/* Paso 2: Leer los datos financieros desde la base de datos */
+data financials;
+    set mylib.financial_table; /* Reemplaza "financial_table" con el nombre de la tabla que contiene los datos financieros */
+run;
+
+/* Paso 3: Realizar un análisis estadístico descriptivo */
+proc means data=financials;
+    var revenue profit assets; /* Reemplaza con las variables de interés */
+run;
+```
+En este ejemplo, primero nos conectamos a la base de datos SQL utilizando la instrucción libname y proporcionando los detalles de inicio de sesión y la ubicación del servidor. Luego, utilizamos la instrucción data para leer los datos financieros desde la tabla específica en la base de datos.
+
+Después, usamos el procedimiento proc means para realizar el análisis estadístico descriptivo. En el ejemplo, se seleccionan las variables de interés (revenue, profit y assets) y se calculan estadísticas descriptivas como la media, la mediana, el mínimo, el máximo y la desviación estándar.
+
+Puedes personalizar este código según tus necesidades. Asegúrate de reemplazar "mylib.financial_table" con el nombre de tu tabla de datos financieros y ajustar las variables de interés según los campos presentes en tu base de datos.
+
+**Exportamos el archivo a Excel para generar una presentación:**
+```SAS
+/* Paso 4: Exportar los datos a un archivo de Excel */
+proc export data=financials
+    outfile='ruta/del/archivo.xlsx'
+    dbms=xlsx
+    replace;
+    sheet='Datos financieros';
+run;
+```
+En este ejemplo, debes reemplazar 'ruta/del/archivo.xlsx' con la ubicación y el nombre de archivo deseado para el archivo de Excel que se generará.
+
+El procedimiento proc export exporta los datos de la tabla financials al archivo de Excel especificado. El argumento dbms=xlsx indica que el formato de salida es Excel (.xlsx). Puedes cambiarlo a dbms=xls si deseas un archivo de Excel en formato anterior (.xls).
+
+Además, puedes especificar el nombre de la hoja de Excel con el argumento sheet. En el ejemplo, se utiliza 'Datos financieros', pero puedes cambiarlo según tus preferencias.
+
+Una vez que hayas exportado los datos a un archivo de Excel, podrás utilizar ese archivo como origen de datos en Power BI para crear tus visualizaciones y presentaciones a tus superiores.
+
+Recuerda que debes tener instalado Microsoft Excel en el equipo donde se ejecuta SAS para que funcione la exportación a formato Excel.
+
+----------------------------------------
+
+### Ejemplo avanzado
+
+Ahora quiero extraer tres columnas de una tabla desde sql las cuales he identificado que son variables explicativas para el valor de un activo y hacer una regresion lineal multple para predecir por ejemplo el valor de un activo
+
+Si deseas realizar una regresión lineal múltiple en SAS utilizando tres columnas de una tabla en SQL como variables explicativas para predecir el valor de un activo, puedes seguir los siguientes pasos:
+
+1. Conéctate a la base de datos SQL utilizando la instrucción LIBNAME en SAS. Asegúrate de proporcionar los detalles de inicio de sesión, servidor y base de datos correctos.
+```SAS
+libname mylib sqlsvr user=myusername password=mypassword server=myserver database=mydatabase;
+
+```
+2. Crea un conjunto de datos SAS utilizando el procedimiento PROC SQL para extraer las tres columnas de la tabla SQL que deseas utilizar como variables explicativas y el valor del activo que deseas predecir. Puedes utilizar una consulta SQL para seleccionar las columnas específicas y aplicar cualquier filtro o condición necesario.
+
+```SAS
+proc sql;
+    create table mydata as
+    select columna1, columna2, columna3, valor_activo
+    from mylib.mytable; /* Reemplaza "mytable" con el nombre de la tabla en la base de datos SQL */
+quit;
+```
+3. Utiliza el procedimiento PROC REG de SAS para realizar la regresión lineal múltiple utilizando las tres columnas como variables explicativas y el valor del activo como variable objetivo.
+```SAS
+proc reg data=mydata;
+    model valor_activo = columna1 columna2 columna3;
+run;
+```
+En este ejemplo, debes reemplazar "columna1", "columna2" y "columna3" con los nombres de las tres columnas que has identificado como variables explicativas, y "valor_activo" con el nombre de la columna que contiene los valores del activo.
+
+El procedimiento PROC REG realizará la regresión lineal múltiple y proporcionará los resultados, incluyendo los coeficientes, estadísticas de ajuste, valores p, etc.
+
+Recuerda ajustar los nombres de la base de datos, la tabla y las columnas según tu entorno y configuración específica. Además, asegúrate de tener los permisos adecuados para acceder y leer la tabla desde la base de datos SQL en SAS.
+
+Ten en cuenta que este es un ejemplo básico de una regresión lineal múltiple en SAS. Puedes explorar opciones adicionales en SAS para analizar y validar el modelo de regresión, como la evaluación de la calidad del ajuste, la detección de multicolinealidad, la selección de variables, entre otros.
+
+-----------------------
+
+### Ejemplo intermedionde consultas
+
+Quiero agrupar por una columna 3 registros que están en 3 diferentes tablas de SQL con SAS, ¿Como podría hacerlo? Por ejemplo es empleado_id en una tabla tengo sus datos personales, en otra tabla tengo su informacion laboral: departamento, ubicacion, salario y en otra tabla hay registros de sus proyectos. Debo presentar en una tabla todos los datos relacionados a el empleado, **las tres tablas se relaciona por la clave empleado_id**.
+
+Para agrupar registros de tres tablas diferentes en SAS, utilizando la clave `empleado_id` como relación, puedes seguir estos pasos:
+
+1. Conectarse a la base de datos SQL utilizando la instrucción `LIBNAME` en SAS. Asegúrate de proporcionar los detalles de inicio de sesión, servidor y base de datos correctos.
+
+```sas
+libname mylib sqlsvr user=myusername password=mypassword server=myserver database=mydatabase;
+```
+
+2. Utiliza el procedimiento `PROC SQL` para realizar una combinación (join) de las tres tablas utilizando la clave `empleado_id`.
+
+```sas
+proc sql;
+    create table datos_completos as
+    select a.empleado_id, a.nombre, a.apellido, b.departamento, b.ubicacion, b.salario, c.proyecto
+    from mylib.tabla_personal a
+    left join mylib.tabla_laboral b
+    on a.empleado_id = b.empleado_id
+    left join mylib.tabla_proyectos c
+    on a.empleado_id = c.empleado_id;
+quit;
+```
+
+En este ejemplo, debes reemplazar "mylib" con la librería en la que se encuentran las tablas en la base de datos SQL. Además, reemplaza "tabla_personal", "tabla_laboral" y "tabla_proyectos" con los nombres reales de las tablas.
+
+Utilizamos el operador `LEFT JOIN` para asegurarnos de que todos los registros de la tabla personal se incluyan en el resultado final, incluso si no tienen coincidencias en las otras tablas.
+
+3. La salida de esta consulta se almacenará en una nueva tabla llamada "datos_completos". Esta tabla contendrá todos los datos relacionados al empleado, incluyendo sus datos personales, información laboral y registros de proyectos.
+
+Ahora puedes utilizar la tabla "datos_completos" para realizar análisis, generar informes o realizar cualquier operación adicional que necesites.
+
+Recuerda que debes ajustar los nombres de la base de datos, las tablas y las columnas según tu entorno y configuración específica. Además, asegúrate de tener los permisos adecuados para acceder y leer las tablas desde la base de datos SQL en SAS.
